@@ -214,17 +214,20 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
     NSMutableArray *links = [NSMutableArray array];
     [self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(NSDictionary<NSString *,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
+        NSAttributedString *attrinbutedString = [_attributedText attributedSubstringFromRange:range];
         if (attrs[NSLinkAttributeName]) {
             CSTextLink *link = [CSTextLink new];
             link.type = CSTextLinkTypeURL;
-            link.attributeString = [_attributedText attributedSubstringFromRange:range];
+            link.attributedDictionary = [attrinbutedString attributesAtIndex:0 effectiveRange:nil];
+            link.text = attributedText.string;
             link.range = range;
             [links addObject:link];
         }
         if (attrs[NSAttachmentAttributeName]) {
             CSTextLink *link = [CSTextLink new];
             link.type = CSTextLinkTypeImage;
-            link.attributeString = [_attributedText attributedSubstringFromRange:range];
+            link.attributedDictionary = [attrinbutedString attributesAtIndex:0 effectiveRange:nil];
+            link.text = attributedText.string;
             link.range = range;
             [links addObject:link];
         }

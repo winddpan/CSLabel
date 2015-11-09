@@ -19,5 +19,6 @@ typedef NS_ENUM(NSUInteger, CSTextLinkType) {
 @property (nonatomic, assign) CSTextLinkType type;
 @property (nonatomic, assign) NSRange range;
 @property (nonatomic, assign) CGRect glyphRect;
-@property (nonatomic, strong) NSAttributedString *attributeString;
+@property (nonatomic, strong) NSString *text;
+@property (nonatomic, strong) NSDictionary *attributedDictionary;
 @end
