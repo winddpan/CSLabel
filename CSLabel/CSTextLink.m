@@ -10,6 +10,6 @@
 
 @implementation CSTextLink
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@ - %p: type:%zd range:%@ glyphRect:%@\nattributedString:%@>", self.class, self, self.type, NSStringFromRange(self.range), NSStringFromCGRect(self.glyphRect), self.attributeString];
+    return [NSString stringWithFormat:@"<%@ - %p: type:%zd range:%@ glyphRect:%@\ntext:%@\nattributedDict:%@>", self.class, self, self.type, NSStringFromRange(self.range), NSStringFromCGRect(self.glyphRect), self.text, self.attributedDictionary];
 }
 @end
