@@ -20,7 +20,7 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
     self = [super init];
     if (self) {
         self.thumbImageWidth = [self.class defaultSerializer].thumbImageWidth ? : MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-        self.placeholerImage = [self.class defaultSerializer].placeholerImage;
+        self.placeholderImage = [self.class defaultSerializer].placeholderImage;
         self.failedImage = [self.class defaultSerializer].failedImage;
     }
     return self;
@@ -109,7 +109,7 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
                                             completion:^(UIImage *screenshot) {
                                                 weakSelf.image = screenshot;
                                                 weakSelf.status = CSTextAttachmentStatusDownloaded;
-                                                [[NSNotificationCenter defaultCenter] postNotificationName:CSTextAttachmentDidDownloadNotification object:self];
+                                                [[NSNotificationCenter defaultCenter] postNotificationName:CSTextAttachmentDidDownloadNotification object:weakSelf];
                                             }];
             });
         });
@@ -119,7 +119,7 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
     _srcImage = [[CSTextAttachment sharedCache] objectForKey:self.thumbURL];
     
     if (!_srcImage && _status == CSTextAttachmentStatusReady) {
-        self.image = self.serizlizer.placeholerImage;
+        self.image = self.serizlizer.placeholderImage;
         _status = CSTextAttachmentStatusDownloading;
 
         NSString *thumbURL = [self thumbURL];

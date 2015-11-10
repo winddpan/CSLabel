@@ -12,7 +12,7 @@
 extern NSString *const CSHTMLTextAttachmentSerializerName;
 
 @interface CSTextAttachmentSerializer : NSObject
-@property (nonatomic, strong)  UIImage *placeholerImage;
+@property (nonatomic, strong)  UIImage *placeholderImage;
 @property (nonatomic, strong)  UIImage *failedImage;
 @property (nonatomic, assign)  CGFloat thumbImageWidth;
 

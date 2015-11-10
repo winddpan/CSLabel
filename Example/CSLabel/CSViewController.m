@@ -20,7 +20,7 @@
     [super viewDidLoad];
 
     [[CSLabel appearance] setLinkTextColor:[UIColor redColor]];
-    [[CSTextAttachmentSerializer defaultSerializer] setPlaceholerImage:[UIImage imageNamed:@"IMG_0355.JPG"]];
+    [[CSTextAttachmentSerializer defaultSerializer] setPlaceholderImage:[UIImage imageNamed:@"IMG_0355.JPG"]];
 
     NSError *error;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"HTML2" ofType:@"html"];
