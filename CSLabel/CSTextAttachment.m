@@ -175,11 +175,12 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
         self.status = attachment.status;
         self.image = attachment.image;
     }
+    
 }
 
 - (CGRect)boundsForConsiderSize:(CGSize)cSize
 {
-    CGFloat screenScale = [self.contentURL hasPrefix:@"table://"] ?  [UIScreen mainScreen].scale : 1;
+    CGFloat screenScale = (self.image == self.serizlizer.placeholderImage || self.image == self.serizlizer.failedImage || [self.contentURL hasPrefix:@"table://"]) ?  [UIScreen mainScreen].scale : 1;
     CGSize size = CGSizeMake(self.image.size.width * self.image.scale / screenScale,
                              self.image.size.height * self.image.scale / screenScale);
     
