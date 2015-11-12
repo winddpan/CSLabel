@@ -22,7 +22,6 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 @property (strong, nonatomic) NSTextContainer *textContainer;
 
 @property (strong, nonatomic) NSArray *links;
-@property (assign, nonatomic) CGFloat preferredLayoutWidth;
 @property (strong, nonatomic) CSTextLink *activeLink;
 @end
 
@@ -51,8 +50,6 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
 - (void)commonInit
 {
-    _preferredLayoutWidth = -1;
-
     self.textStorage = [NSTextStorage new];
 
     self.layoutManager = [NSLayoutManager new];
@@ -99,7 +96,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     
     if (range.location != NSNotFound) {
         _needUpdateLayout = YES;
-        [self setNeedsLayout];
+        [self invalidateIntrinsicContentSize];
         
         if ([self.delegate respondsToSelector:@selector(CSLabelDidUpdateAttachment:atRange:)]) {
             [self.delegate CSLabelDidUpdateAttachment:self atRange:range];
@@ -190,7 +187,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
 - (CGSize)intrinsicContentSize
 {
-    return [self sizeThatFits:CGSizeMake(self.preferredLayoutWidth, -1)];
+    return [self sizeThatFits:CGSizeMake(self.bounds.size.width, -1)];
 }
 
 #pragma mark - setter
@@ -253,17 +250,8 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
 #pragma mark - layout
 
-- (void)setPreferredLayoutWidth:(CGFloat)preferredLayoutWidth {
-    if (_needUpdateLayout || preferredLayoutWidth != _preferredLayoutWidth) {
-        _preferredLayoutWidth = preferredLayoutWidth;
-        [self invalidateIntrinsicContentSize];
-    }
-    _needUpdateLayout = NO;
-}
-
 - (void)layoutSubviews {
     self.textContainer.size = UIEdgeInsetsInsetRect(self.bounds, self.contentInset).size;
-    self.preferredLayoutWidth = self.bounds.size.width;
 
     [self.layer removeAllAnimations];
     [super layoutSubviews];
