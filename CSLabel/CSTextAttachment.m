@@ -164,11 +164,13 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
 
 - (void)requestImageWithURL:(NSURL *)url
           completionHandler:(void (^)(NSData * __nullable data, NSURLResponse * __nullable response, NSError * __nullable error))completionHandler {
+    
     NSOperatingSystemVersion ios9_0_1 = (NSOperatingSystemVersion){9, 0, 1};
     if ([[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:ios9_0_1]) {
-        [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             completionHandler(data, response, error);
         }];
+        [task resume];
     } else {
         [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:url] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
             completionHandler(data, response, connectionError);

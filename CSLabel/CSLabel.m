@@ -7,7 +7,6 @@
 //
 
 #import "CSLabel.h"
-#import "CSHTMLReader.h"
 
 NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
