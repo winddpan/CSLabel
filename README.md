@@ -8,7 +8,7 @@ NSString *html = @"<p><img src=\"https://www.baidu.com/img/bdlogo.png\"></p>"
 "<p>the last paragraph!</p>";
 
 CSHTMLTextAttachmentSerializerName *attachmentSerializer = [CSHTMLTextAttachmentSerializerName new];
-attachmentSerializer.placeholerImage = ...;
+attachmentSerializer.placeholderImage = ...;
 attachmentSerializer.failedImage = ...;
 
 CSLabel *label = ...

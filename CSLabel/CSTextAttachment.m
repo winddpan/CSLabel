@@ -22,6 +22,7 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
         self.thumbImageWidth = [self.class defaultSerializer].thumbImageWidth ? : MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         self.placeholderImage = [self.class defaultSerializer].placeholderImage;
         self.failedImage = [self.class defaultSerializer].failedImage;
+        self.scale = [self.class defaultSerializer].scale;
     }
     return self;
 }
@@ -36,6 +37,7 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
     static CSTextAttachmentSerializer *serializer;
     dispatch_once(&onceToken, ^{
         serializer = [[CSTextAttachmentSerializer alloc] _superInit];
+        serializer.scale = 1;
     });
     return serializer;
 }
@@ -180,9 +182,9 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
 
 - (CGRect)boundsForConsiderSize:(CGSize)cSize
 {
-    CGFloat screenScale = (self.image == self.serizlizer.placeholderImage || self.image == self.serizlizer.failedImage || [self.contentURL hasPrefix:@"table://"]) ?  [UIScreen mainScreen].scale : 1;
-    CGSize size = CGSizeMake(self.image.size.width * self.image.scale / screenScale,
-                             self.image.size.height * self.image.scale / screenScale);
+    CGFloat imageScale = (self.image == self.serizlizer.placeholderImage || self.image == self.serizlizer.failedImage || [self.contentURL hasPrefix:@"table://"]) ?  1 : self.serizlizer.scale;
+    CGSize size = CGSizeMake(self.image.size.width * self.image.scale / [UIScreen mainScreen].scale * imageScale,
+                             self.image.size.height * self.image.scale / [UIScreen mainScreen].scale * imageScale);
     
     CGFloat scale = size.width / cSize.width;
     if (scale > 1) {
