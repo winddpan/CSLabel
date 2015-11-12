@@ -15,7 +15,6 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 {
     @private
     BOOL _needUpdateLayout;
-    CGRect _renderFrame;
 }
 @property (strong, nonatomic) NSLayoutManager *layoutManager;
 @property (strong, nonatomic) NSTextStorage *textStorage;
@@ -255,10 +254,10 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
     [self.layer removeAllAnimations];
     [super layoutSubviews];
-    
-    if (!CGRectEqualToRect(_renderFrame, UIEdgeInsetsInsetRect(self.bounds, self.contentInset))) {
-        _renderFrame = UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
+
+    if (_needUpdateLayout) {
         [self setNeedsDisplay];
+        _needUpdateLayout = NO;
     }
 }
 
