@@ -55,6 +55,10 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
     static NSCache *cache;
     dispatch_once(&onceToken, ^{
         cache = [[NSCache alloc] init];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * __unused notification) {
+            [cache removeAllObjects];
+        }];
     });
     return cache;
 }
