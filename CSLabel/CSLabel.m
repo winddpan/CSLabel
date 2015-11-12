@@ -14,7 +14,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 @interface CSLabel() <UIGestureRecognizerDelegate, NSLayoutManagerDelegate>
 {
     @private
-    BOOL _needUpdateLayout;
+    BOOL _needUpdateDisplay;
 }
 @property (strong, nonatomic) NSLayoutManager *layoutManager;
 @property (strong, nonatomic) NSTextStorage *textStorage;
@@ -50,7 +50,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 - (void)commonInit
 {
     self.textStorage = [NSTextStorage new];
-
+    
     self.layoutManager = [NSLayoutManager new];
     self.layoutManager.allowsNonContiguousLayout = NO;
     self.layoutManager.delegate = self;
@@ -60,7 +60,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     self.textContainer.lineFragmentPadding = 0.0f;
     self.textContainer.lineBreakMode = NSLineBreakByWordWrapping;
     self.textContainer.size = (CGSize){CGFLOAT_MAX , CGFLOAT_MAX};
-
+    
     [self.textStorage addLayoutManager:self.layoutManager];
     [self.layoutManager addTextContainer:self.textContainer];
     [self.layoutManager ensureLayoutForTextContainer:self.textContainer];
@@ -94,8 +94,9 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     }];
     
     if (range.location != NSNotFound) {
-        _needUpdateLayout = YES;
+        [self.layoutManager invalidateLayoutForCharacterRange:range actualCharacterRange:NULL];
         [self invalidateIntrinsicContentSize];
+        [self setNeedsLayout];
         
         if ([self.delegate respondsToSelector:@selector(CSLabelDidUpdateAttachment:atRange:)]) {
             [self.delegate CSLabelDidUpdateAttachment:self atRange:range];
@@ -201,13 +202,14 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 - (void)setContentInset:(UIEdgeInsets)contentInset
 {
     _contentInset = contentInset;
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
     _attributedText = [attributedText copy];
-
+    
     NSMutableArray *links = [NSMutableArray array];
     [self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(NSDictionary<NSString *,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
         NSAttributedString *attrinbutedString = [_attributedText attributedSubstringFromRange:range];
@@ -230,7 +232,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     }];
     self.links = [links copy];
     self.activeLink = nil;
-
+    
     NSMutableAttributedString *drawText = [[NSMutableAttributedString alloc] initWithAttributedString:_attributedText];
     [drawText enumerateAttributesInRange:NSMakeRange(0, drawText.length) options:0 usingBlock:^(NSDictionary<NSString *,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
         if (attrs[NSLinkAttributeName]) {
@@ -243,21 +245,26 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     }];
     
     [self.textStorage setAttributedString:drawText];
-    _needUpdateLayout = YES;
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
 #pragma mark - layout
 
+- (void)invalidateIntrinsicContentSize {
+    _needUpdateDisplay = YES;
+    [super invalidateIntrinsicContentSize];
+}
+
 - (void)layoutSubviews {
     self.textContainer.size = UIEdgeInsetsInsetRect(self.bounds, self.contentInset).size;
-
+    
     [self.layer removeAllAnimations];
     [super layoutSubviews];
-
-    if (_needUpdateLayout) {
+    
+    if (_needUpdateDisplay) {
         [self setNeedsDisplay];
-        _needUpdateLayout = NO;
+        _needUpdateDisplay = NO;
     }
 }
 
