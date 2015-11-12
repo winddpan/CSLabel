@@ -19,10 +19,10 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
 {
     self = [super init];
     if (self) {
-        self.thumbImageWidth = [self.class defaultSerializer].thumbImageWidth ? : MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        self.thumbImageWidth = [self.class defaultSerializer].thumbImageWidth;
+        self.scale = [self.class defaultSerializer].scale;
         self.placeholderImage = [self.class defaultSerializer].placeholderImage;
         self.failedImage = [self.class defaultSerializer].failedImage;
-        self.scale = [self.class defaultSerializer].scale;
     }
     return self;
 }
@@ -38,6 +38,9 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
     dispatch_once(&onceToken, ^{
         serializer = [[CSTextAttachmentSerializer alloc] _superInit];
         serializer.scale = 1;
+        serializer.thumbImageWidth = MIN([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        serializer.placeholderImage = nil;
+        serializer.failedImage = nil;
     });
     return serializer;
 }
