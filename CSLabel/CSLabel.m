@@ -94,7 +94,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     
     if (range.location != NSNotFound) {
         [self.layoutManager invalidateLayoutForCharacterRange:range actualCharacterRange:NULL];
-        [self invalidateIntrinsicContentSize];
+        [self setNeedsUpdateIntrinsicContentSize];
         [self setNeedsLayout];
         
         if ([self.delegate respondsToSelector:@selector(CSLabelDidUpdateAttachment:atRange:)]) {
@@ -186,7 +186,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
 - (CGSize)intrinsicContentSize
 {
-    return [self sizeThatFits:CGSizeMake(self.bounds.size.width, -1)];
+    return [self sizeThatFits:CGSizeMake(self.preferredLayoutWidth, -1)];
 }
 
 #pragma mark - setter
@@ -201,7 +201,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 - (void)setContentInset:(UIEdgeInsets)contentInset
 {
     _contentInset = contentInset;
-    [self invalidateIntrinsicContentSize];
+    [self setNeedsUpdateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
@@ -244,8 +244,16 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     }];
     
     [self.textStorage setAttributedString:drawText];
-    [self invalidateIntrinsicContentSize];
+    [self setNeedsUpdateIntrinsicContentSize];
     [self setNeedsLayout];
+}
+
+- (void)setPreferredLayoutWidth:(CGFloat)preferredLayoutWidth {
+    if (_preferredLayoutWidth != preferredLayoutWidth) {
+        _preferredLayoutWidth = preferredLayoutWidth;
+        [self invalidateIntrinsicContentSize];
+        [self setNeedsLayout];
+    }
 }
 
 #pragma mark - layout
@@ -255,10 +263,18 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     [super invalidateIntrinsicContentSize];
 }
 
+- (void)setNeedsUpdateIntrinsicContentSize {
+    _needUpdateDisplay = YES;
+    _preferredLayoutWidth = -1;
+}
+
 - (void)layoutSubviews {
-    self.textContainer.size = UIEdgeInsetsInsetRect(self.bounds, self.contentInset).size;
+    if (self.preferredLayoutWidth != self.bounds.size.width) {
+        self.preferredLayoutWidth = self.bounds.size.width;
+        return;
+    }
     
-    [self.layer removeAllAnimations];
+    self.textContainer.size = UIEdgeInsetsInsetRect(self.bounds, self.contentInset).size;
     [super layoutSubviews];
     
     if (_needUpdateDisplay) {
@@ -267,15 +283,24 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     }
 }
 
+- (void)layoutSublayersOfLayer:(CALayer *)layer {
+    if (layer == self.layer) {
+        [layer removeAllAnimations];
+    }
+    [super layoutSublayersOfLayer:layer];
+}
+
 #pragma mark - draw
 
 - (void)drawRect:(CGRect)rect {
-    [self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(NSDictionary<NSString *,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
-        if (_activeLink.type == CSTextLinkTypeURL && NSEqualRanges(_activeLink.range, range)) {
-            [self drawActiveLinkBackgroundAtRange:range];
-            *stop = YES;
-        }
-    }];
+    if (self.activeLink) {
+        [self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(NSDictionary<NSString *,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
+            if (_activeLink.type == CSTextLinkTypeURL && NSEqualRanges(self.activeLink.range, range)) {
+                [self drawActiveLinkBackgroundAtRange:range];
+                *stop = YES;
+            }
+        }];
+    }
     
     CGRect textFrame = UIEdgeInsetsInsetRect(self.bounds, self.contentInset);
     NSRange glyphRange = [_layoutManager glyphRangeForTextContainer:_textContainer];

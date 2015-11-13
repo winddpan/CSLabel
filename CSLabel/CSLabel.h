@@ -34,10 +34,12 @@
 @end
 
 @interface CSLabel : UIView
-@property (nonatomic, weak)   id <CSLabelDelegate> delegate;
-@property (nonatomic, assign) UIEdgeInsets contentInset;
-@property (nonatomic, strong) NSAttributedString *attributedText;
-@property (nonatomic, strong) UIColor *linkTextColor    UI_APPEARANCE_SELECTOR;
+@property(weak)      id <CSLabelDelegate> delegate;
+@property(nonatomic) NSAttributedString *attributedText;
+@property(nonatomic) UIColor *linkTextColor    UI_APPEARANCE_SELECTOR;
+@property(nonatomic) UIEdgeInsets contentInset;
+
+@property(nonatomic) CGFloat preferredLayoutWidth;
 @end
 
 
