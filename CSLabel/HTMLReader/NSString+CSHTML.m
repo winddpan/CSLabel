@@ -34,11 +34,11 @@ NSString* const kLaTextURL = @"http://latex.codecogs.com/gif.latex?";
 - (BOOL)isHTMLBlank {
     NSString *removeTagStr = [self stringByRemoveHTMLTag];
     if (removeTagStr.length == 0) {
-        if (![self containsString:@"img"] && ![self containsString:@"ul"] && ![self containsString:@"ol"]) {
-            return YES;
+        if ([self containsString:@"img"] || [self containsString:@"ul"] || [self containsString:@"ol"]) {
+            return NO;
         }
     }
-    return NO;
+    return YES;
 }
 
 - (NSString *)stringByRemoveHTMLTag
