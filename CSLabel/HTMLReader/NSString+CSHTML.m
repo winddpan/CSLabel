@@ -12,25 +12,6 @@ NSString* const kLaTextURL = @"http://latex.codecogs.com/gif.latex?";
 
 @implementation NSString (CSHTML)
 
-+ (NSString *)stringByRemoveHTMLTag:(NSString *)string
-{
-    NSRange r;
-    NSString *s = [string copy];
-    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
-        s = [s stringByReplacingCharactersInRange:r withString:@""];
-    while ((r = [s rangeOfString:@"&\\w*;" options:NSRegularExpressionSearch]).location != NSNotFound)
-        s = [s stringByReplacingCharactersInRange:r withString:@""];
-    s = [s stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
-    
-    return s;
-}
-
-+ (NSString *)stringByRemoveNewlineCharacters:(NSString *)string
-{
-    NSString *text = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    return text;
-}
-
 + (NSString *)generateRandomString:(NSInteger)num {
     NSMutableString* string = [NSMutableString stringWithCapacity:num];
     for (int i = 0; i < num; i++) {
@@ -47,6 +28,36 @@ NSString* const kLaTextURL = @"http://latex.codecogs.com/gif.latex?";
         [string appendFormat:@"%C", (unichar)(0x4e00 + arc4random_uniform(scope))];
     }
     return string;
+}
+
+
+- (BOOL)isHTMLBlank {
+    NSString *removeTagStr = [self stringByRemoveHTMLTag];
+    if (removeTagStr.length == 0) {
+        if (![self containsString:@"img"] && ![self containsString:@"ul"] && ![self containsString:@"ol"]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (NSString *)stringByRemoveHTMLTag
+{
+    NSRange r;
+    NSString *s = [self copy];
+    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
+        s = [s stringByReplacingCharactersInRange:r withString:@""];
+    while ((r = [s rangeOfString:@"&\\w*;" options:NSRegularExpressionSearch]).location != NSNotFound)
+        s = [s stringByReplacingCharactersInRange:r withString:@""];
+    s = [s stringByReplacingOccurrencesOfString:@"&nbsp;" withString:@" "];
+    
+    return s;
+}
+
+- (NSString *)stringByRemoveNewlineCharacters
+{
+    NSString *text = [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    return text;
 }
 
 - (NSString *)urlEncode {

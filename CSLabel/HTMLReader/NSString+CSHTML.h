@@ -9,9 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface NSString (CSHTML)
-
-+ (NSString *)stringByRemoveHTMLTag:(NSString *)string;
-+ (NSString *)stringByRemoveNewlineCharacters:(NSString *)string;
-
+- (BOOL)isHTMLBlank;
+- (NSString *)stringByRemoveHTMLTag;
+- (NSString *)stringByRemoveNewlineCharacters;
 - (NSString *)stringByReplaceLaTextToImageUrl;
 @end

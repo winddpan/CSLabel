@@ -78,8 +78,6 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
-    _webView.backgroundColor = [UIColor yellowColor];
-
     if (self.shotterQueue.count) {
         CSWebScreenShotterObject *object = self.shotterQueue.firstObject;
         if (object.completion) {

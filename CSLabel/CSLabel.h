@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CSHTMLReader.h"
 #import "CSTextLink.h"
 #import "CSTextAttachment.h"
+#import "CSHTMLReader.h"
 
 @class CSLabel;
 
