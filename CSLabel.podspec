@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "CSLabel"
-  s.version          = "1.0.1"
+  s.version          = "1.0.2"
   s.summary          = "HTML -> TextKit displayer."
   s.description      = <<-DESC
                        AttributedString displayer view.
