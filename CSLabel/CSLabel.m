@@ -348,7 +348,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 @implementation CSLabel (HTML)
 
 - (void)setHTML:(NSString *)html withAttributes:(NSDictionary *)attrs {
-    self.attributedText = [[NSAttributedString alloc] initWithHTML:html htmlAttributes:attrs];
+    self.attributedText = [[NSAttributedString alloc] initWithHTML:html attributes:attrs];
 }
 
 @end

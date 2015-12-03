@@ -76,7 +76,7 @@ typedef enum : NSUInteger {
     if (![html isKindOfClass:[NSString class]]) {
         return nil;
     }
-    _defaultAttribute = [attrs copy];
+    _defaultAttribute = attrs ? [attrs copy] : [NSDictionary new];
     _defatulFont = _defaultAttribute[NSFontAttributeName] ? : [UIFont systemFontOfSize:12];
     _output = [[NSMutableAttributedString alloc] init];
 
@@ -465,7 +465,7 @@ typedef enum : NSUInteger {
 
 @implementation NSAttributedString (HTMLReader)
 
-- (instancetype)initWithHTML:(NSString *)html htmlAttributes:(NSDictionary *)htmlAttrs
+- (instancetype)initWithHTML:(NSString *)html attributes:(NSDictionary *)htmlAttrs
 {
     NSAttributedString *as = [[CSHTMLReader new] AttributedStringFromHTML:html attributes:htmlAttrs];
     

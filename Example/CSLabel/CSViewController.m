@@ -25,7 +25,7 @@
     NSError *error;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"HTML2" ofType:@"html"];
     NSString *html = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
-    NSAttributedString *xx1 = [[NSAttributedString alloc] initWithHTML:html htmlAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}];
+    NSAttributedString *xx1 = [[NSAttributedString alloc] initWithHTML:html attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}];
     
     self.label.delegate = self;
     self.label.contentInset = UIEdgeInsetsMake(20, 20, 20, 20);

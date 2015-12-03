@@ -21,7 +21,7 @@
  *  @param html      pure html string, no css
  *  @param htmlAttrs sytle attrs - CSHtmlXXX
  */
-- (instancetype)initWithHTML:(NSString *)html htmlAttributes:(NSDictionary *)htmlAttrs;
+- (instancetype)initWithHTML:(NSString *)html attributes:(NSDictionary *)htmlAttrs;
 
 @end
 
