@@ -7,25 +7,25 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = "CSLabel"
-  s.version          = "1.0.3"
-  s.summary          = "HTML -> TextKit displayer."
-  s.description      = <<-DESC
-                       AttributedString displayer view.
-                       DESC
+s.name             = "CSLabel"
+s.version          = "1.0.4"
+s.summary          = "HTML -> TextKit displayer."
+s.description      = <<-DESC
+AttributedString displayer view.
+DESC
 
-  s.homepage         = "https://github.com/winddpan/CSLabel"
-  s.license          = 'MIT'
-  s.author           = { "winddpan" => "winddpan@126.com" }
-  s.source           = { :git => "https://github.com/winddpan/CSLabel.git", :tag => s.version.to_s }
+s.homepage         = "https://github.com/winddpan/CSLabel"
+s.license          = 'MIT'
+s.author           = { "winddpan" => "winddpan@126.com" }
+s.source           = { :git => "https://github.com/winddpan/CSLabel.git", :tag => s.version.to_s }
 
-  s.platform     = :ios, '7.0'
-  s.requires_arc = true
+s.platform     = :ios, '7.0'
+s.requires_arc = true
 
-  s.source_files = 'CSLabel/**/*'
+s.source_files = 'CSLabel/**/*'
 
 
-  s.frameworks = 'UIKit', 'Foundation'
-  s.library = 'xml2'
-  s.xcconfig = { 'HEADER_SEARCH_PATHS' => '"${SDK_DIR}/usr/include/libxml2"' }
+s.frameworks = 'UIKit', 'Foundation'
+s.library = 'xml2'
+s.xcconfig = { 'HEADER_SEARCH_PATHS' => '"${SDK_DIR}/usr/include/libxml2"' }
 end
