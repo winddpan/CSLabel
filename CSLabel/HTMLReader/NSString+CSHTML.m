@@ -8,39 +8,54 @@
 
 #import "NSString+CSHTML.h"
 
-NSString* const kLaTextURL = @"http://latex.codecogs.com/gif.latex?";
+NSString* const kLaTextURL = @"https://latex.codecogs.com/gif.latex?";
 
 @implementation NSString (CSHTML)
 
 - (NSString *)cs_urlEncode {
-    return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"\":/?#[]@!$ &\'()*+,;=\\\"<>%{}|\\\\^~`\""]];
+    return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
+                                                                                 (__bridge CFStringRef)self,
+                                                                                 NULL,
+                                                                                 (CFStringRef)@"!*'\"();:@&=+$,/?%#[]% ",
+                                                                                 CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+}
+
+- (NSString *)cs_urlDecode {
+    NSString *string = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
+                                                                                                             (__bridge CFStringRef)self,
+                                                                                                             CFSTR(""),
+                                                                                                             CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+    string = [string stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
+    string = [string stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
+    return string;
 }
 
 - (NSString *)cs_urlByLaText:(NSString *)latext
 {
-    NSString *suffix = [@"\\inline \\dpi{200} \\fn_phv &" stringByAppendingString:latext];
-    NSString *tag = [NSString stringWithFormat:@"<img src=\"%@%@\"/>", kLaTextURL, [suffix cs_urlEncode]];
+    latext = [latext cs_urlDecode];
+    //NSString *suffix = [@"\\inline \\dpi{200} \\fn_phv &" stringByAppendingString:latext];
+    NSString *tag = [NSString stringWithFormat:@"<img src=\"%@%@\"/>", kLaTextURL, [latext cs_urlEncode]];
+    
     return tag;
 }
 
 - (NSString *)stringByReplaceLaTextToImageUrl
 {
-    NSString *result = [self copy];
-    NSString *pattern = @"\\$[^\\$]+\\$";
+    NSMutableString *result = [self mutableCopy];
+    NSString *pattern = @"\\$[^\\$<>]+\\$";
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
-                                                                          options:NSRegularExpressionCaseInsensitive
-                                                                            error:NULL];
-    NSArray *matches = [regex matchesInString:self options:0 range:NSMakeRange(0, [self length])];
-    for (NSTextCheckingResult *match in matches) {
+                                                                           options:NSRegularExpressionCaseInsensitive
+                                                                             error:NULL];
+    
+    NSTextCheckingResult *match;
+    while ((match = [regex firstMatchInString:result options:0 range:NSMakeRange(0, result.length)]) != nil) {
         NSRange matchRange = [match range];
-        NSString *tagString = [self substringWithRange:matchRange];
-        
-        if (tagString.length >2) {
-            NSString *latexImgTag = [self cs_urlByLaText:[tagString substringWithRange:NSMakeRange(1, tagString.length -2)] ];
-            result = [result stringByReplacingOccurrencesOfString:tagString withString:latexImgTag];
-        }
+        NSString *tagString = [result substringWithRange:matchRange];
+        NSString *latexImgTag = [self cs_urlByLaText:[tagString substringWithRange:NSMakeRange(1, tagString.length -2)] ];
+        [result replaceCharactersInRange:matchRange withString:latexImgTag];
     }
-    return result;
+    
+    return [result copy];
 }
 
 @end
