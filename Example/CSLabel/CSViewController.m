@@ -18,14 +18,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     [[CSLabel appearance] setLinkTextColor:[UIColor redColor]];
-    [[CSTextAttachmentSerializer defaultSerializer] setPlaceholderImage:[UIImage imageNamed:@"IMG_0355.JPG"]];
-
+    [[CSTextAttachmentSerializer defaultSerializer] setFailedImage:[UIImage imageNamed:@"IMG_0355.JPG"]];
+    [[CSTextAttachmentSerializer defaultSerializer] setPlaceholderImage:[UIImage imageNamed:@"download.gif"]];
+    
     NSError *error;
     NSString *path = [[NSBundle mainBundle] pathForResource:@"HTML2" ofType:@"html"];
     NSString *html = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
     NSAttributedString *xx1 = [[NSAttributedString alloc] initWithHTML:html attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}];
+    
+    CSLabel *testLabel = [[CSLabel alloc] init];
+    testLabel.attributedText = xx1;
     
     self.label.delegate = self;
     self.label.contentInset = UIEdgeInsetsMake(20, 20, 20, 20);

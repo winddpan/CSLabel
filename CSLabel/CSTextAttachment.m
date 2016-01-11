@@ -11,7 +11,7 @@
 
 NSString *const CSHTMLTextAttachmentSerializerName = @"CSHTMLTextAttachmentSerializerName";
 NSString *const CSTextAttachmentDidDownloadNotification = @"CSTextAttachmentDidDownloadNotification";
-NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFailedDonloadNotification";
+NSString *const CSTextAttachmentFailedDownloadNotification = @"CSTextAttachmentFailedDownloadNotification";
 
 @implementation CSTextAttachmentSerializer
 
@@ -90,7 +90,7 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
         _status = CSTextAttachmentStatusReady;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_thumbImageDownloadNotify:) name:CSTextAttachmentDidDownloadNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_thumbImageDownloadNotify:) name:CSTextAttachmentFailedDonloadNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_thumbImageDownloadNotify:) name:CSTextAttachmentFailedDownloadNotification object:nil];
     }
     return self;
 }
@@ -98,6 +98,19 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
 - (void)setContentURL:(NSString *)contentURL
 {
     _contentURL = contentURL;
+    
+    _srcImage = [[CSTextAttachment sharedCache] objectForKey:self.thumbURL];
+    if (_srcImage) {
+        self.image = _srcImage;
+        _status = CSTextAttachmentStatusDownloaded;
+    } else {
+        _status = CSTextAttachmentStatusReady;
+        self.image = self.serizlizer.placeholderImage;
+    }
+}
+
+- (void)setNeedsLoad {
+    NSString *contentURL = self.contentURL;
     __weak typeof(self) weakSelf = self;
     
     //表格转附件
@@ -125,10 +138,7 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
         return;
     }
     
-    _srcImage = [[CSTextAttachment sharedCache] objectForKey:self.thumbURL];
-    
-    if (!_srcImage && _status == CSTextAttachmentStatusReady) {
-        self.image = self.serizlizer.placeholderImage;
+    if (_status == CSTextAttachmentStatusReady && !_srcImage) {
         _status = CSTextAttachmentStatusDownloading;
         
         NSString *thumbURL = [self thumbURL];
@@ -144,7 +154,7 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
                     dispatch_async(dispatch_get_main_queue(), ^{
                         weakSelf.image = self.serizlizer.failedImage;
                         weakSelf.status = CSTextAttachmentStatusDownloadFailed;
-                        [[NSNotificationCenter defaultCenter] postNotificationName:CSTextAttachmentFailedDonloadNotification object:self];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:CSTextAttachmentFailedDownloadNotification object:self];
                     });
                 } else {
                     [[CSTextAttachment sharedCache] setObject:_srcImage forKey:thumbURL];
@@ -156,10 +166,6 @@ NSString *const CSTextAttachmentFailedDonloadNotification = @"CSTextAttachmentFa
                 }
             }];
         }
-    }
-    if (_srcImage) {
-        self.image = _srcImage;
-        _status = CSTextAttachmentStatusDownloaded;
     }
 }
 

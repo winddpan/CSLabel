@@ -22,7 +22,7 @@ extern NSString *const CSHTMLTextAttachmentSerializerName;
 
 
 extern NSString *const CSTextAttachmentDidDownloadNotification;
-extern NSString *const CSTextAttachmentFailedDonloadNotification;
+extern NSString *const CSTextAttachmentFailedDownloadNotification;
 
 typedef enum : NSUInteger {
     CSTextAttachmentStatusReady = 0,
@@ -43,4 +43,5 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong)  UIFont *tableFont;
 @property (nonatomic, strong)  UIColor *tableColor;
 
+- (void)setNeedsLoad;
 @end

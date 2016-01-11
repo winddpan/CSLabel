@@ -69,7 +69,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     self.backgroundColor = [UIColor clearColor];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_attachemntDidUpdatedNotify:) name:CSTextAttachmentDidDownloadNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_attachemntDidUpdatedNotify:) name:CSTextAttachmentFailedDonloadNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_attachemntDidUpdatedNotify:) name:CSTextAttachmentFailedDownloadNotification object:nil];
     
 }
 
@@ -80,29 +80,26 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     if (!self.superview) {
         return;
     }
+    CSTextAttachment *notiAttachment = notification.object;
     
-    CSTextAttachment *attachment = notification.object;
-    __block NSRange range = NSMakeRange(NSNotFound, 0);
-    
-    [_attributedText enumerateAttributesInRange:NSMakeRange(0, _attributedText.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange trange, BOOL *stop) {
-        CSTextAttachment *fAttachment = attrs[NSAttachmentAttributeName];
-        if ([fAttachment isKindOfClass:[CSTextAttachment class]] &&
-            [fAttachment.contentURL isEqualToString:attachment.contentURL]){
-            fAttachment.image = attachment.image;
-            range = trange;
-            *stop = YES;
+    NSMutableSet *updatedRangeSet = [NSMutableSet set];
+    [self.attributedText enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(CSTextAttachment * _Nullable attachment, NSRange range, BOOL * _Nonnull stop) {
+        if ([attachment isKindOfClass:CSTextAttachment.class] && [attachment.contentURL isEqualToString:notiAttachment.contentURL]) {
+            [updatedRangeSet addObject:[NSValue valueWithRange:range]];
         }
     }];
     
-    if (range.location != NSNotFound) {
+    [updatedRangeSet enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
+        NSRange range = [obj rangeValue];
         [self.layoutManager invalidateLayoutForCharacterRange:range actualCharacterRange:NULL];
         [self setNeedsUpdateIntrinsicContentSize];
+        [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
         
         if ([self.delegate respondsToSelector:@selector(CSLabelDidUpdateAttachment:atRange:)]) {
             [self.delegate CSLabelDidUpdateAttachment:self atRange:range];
         }
-    }
+    }];
 }
 
 - (CSTextLink *)_linkAtPoint:(CGPoint)location {
@@ -280,6 +277,14 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     [super layoutSubviews];
     
     if (_needUpdateDisplay) {
+        if (self.superview) {
+            [self.attributedText enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(CSTextAttachment * _Nullable attachment, NSRange range, BOOL * _Nonnull stop) {
+                if ([attachment isKindOfClass:CSTextAttachment.class]) {
+                    [attachment setNeedsLoad];
+                }
+            }];
+        }
+        
         [self setNeedsDisplay];
         _needUpdateDisplay = NO;
     }
