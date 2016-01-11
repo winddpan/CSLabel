@@ -14,7 +14,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 {
 @private
     BOOL _needUpdateDisplay;
-    BOOL _didMoveToWindow;
+    BOOL _shouldLoadAttachments;
 }
 @property (strong, nonatomic) NSLayoutManager *layoutManager;
 @property (strong, nonatomic) NSTextStorage *textStorage;
@@ -264,9 +264,9 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     }];
 }
 
-- (void)didMoveToWindow {
-    [super didMoveToWindow];
-    _didMoveToWindow = YES;
+- (void)willMoveToWindow:(UIWindow *)newWindow {
+    [super willMoveToWindow:newWindow];
+    _shouldLoadAttachments = newWindow != nil;
 }
 
 #pragma mark - layout
@@ -294,7 +294,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
         [self setNeedsDisplay];
         _needUpdateDisplay = NO;
         
-        if (_didMoveToWindow) {
+        if (_shouldLoadAttachments) {
             [self setNeedsAttachmentsLoad];
         }
     }
