@@ -12,7 +12,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
 @interface CSLabel() <UIGestureRecognizerDelegate, NSLayoutManagerDelegate>
 {
-    @private
+@private
     BOOL _needUpdateDisplay;
 }
 @property (strong, nonatomic) NSLayoutManager *layoutManager;
@@ -68,18 +68,20 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     self.userInteractionEnabled = YES;
     self.backgroundColor = [UIColor clearColor];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_attachemntDidDownloadNotify:) name:CSTextAttachmentDidDownloadNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_attachemntDidUpdatedNotify:) name:CSTextAttachmentDidDownloadNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_attachemntDidUpdatedNotify:) name:CSTextAttachmentFailedDonloadNotification object:nil];
+    
 }
 
 #pragma mark - private
 
-- (void)_attachemntDidDownloadNotify:(NSNotification *)notif
+- (void)_attachemntDidUpdatedNotify:(NSNotification *)notification
 {
     if (!self.superview) {
         return;
     }
     
-    CSTextAttachment *attachment = notif.object;
+    CSTextAttachment *attachment = notification.object;
     __block NSRange range = NSMakeRange(NSNotFound, 0);
     
     [_attributedText enumerateAttributesInRange:NSMakeRange(0, _attributedText.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange trange, BOOL *stop) {
