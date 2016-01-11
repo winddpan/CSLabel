@@ -255,6 +255,19 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     }
 }
 
+- (void)setNeedsAttachmentsLoad {
+    [self.attributedText enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(CSTextAttachment * _Nullable attachment, NSRange range, BOOL * _Nonnull stop) {
+        if ([attachment isKindOfClass:CSTextAttachment.class]) {
+            [attachment setNeedsLoad];
+        }
+    }];
+}
+
+- (void)didMoveToWindow {
+    [super didMoveToWindow];
+    [self setNeedsAttachmentsLoad];
+}
+
 #pragma mark - layout
 
 - (void)invalidateIntrinsicContentSize {
@@ -277,14 +290,6 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     [super layoutSubviews];
     
     if (_needUpdateDisplay) {
-        if (self.superview) {
-            [self.attributedText enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(CSTextAttachment * _Nullable attachment, NSRange range, BOOL * _Nonnull stop) {
-                if ([attachment isKindOfClass:CSTextAttachment.class]) {
-                    [attachment setNeedsLoad];
-                }
-            }];
-        }
-        
         [self setNeedsDisplay];
         _needUpdateDisplay = NO;
     }
