@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const CSLaTextURL;
+
 @interface NSString (CSHTML)
 
 - (NSString *)stringByReplaceLaTextToImageUrl;

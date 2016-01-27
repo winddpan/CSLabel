@@ -8,6 +8,7 @@
 
 #import "CSTextAttachment.h"
 #import "CSWebScreenShotter.h"
+#import "NSString+CSHTML.h"
 
 NSString *const CSHTMLTextAttachmentSerializerName = @"CSHTMLTextAttachmentSerializerName";
 NSString *const CSTextAttachmentDidDownloadNotification = @"CSTextAttachmentDidDownloadNotification";
@@ -198,7 +199,10 @@ NSString *const CSTextAttachmentFailedDownloadNotification = @"CSTextAttachmentF
 
 - (CGRect)boundsForConsiderSize:(CGSize)cSize
 {
-    CGFloat imageScale = (self.image == self.serizlizer.placeholderImage || self.image == self.serizlizer.failedImage || [self.contentURL hasPrefix:@"table://"]) ?  1 : self.serizlizer.scale;
+    CGFloat imageScale = (self.image == self.serizlizer.placeholderImage ||
+                          self.image == self.serizlizer.failedImage ||
+                          [self.contentURL hasPrefix:@"table://"] ||
+                          [self.contentURL hasPrefix:kLaTextURL]) ?  1 : self.serizlizer.scale;
     CGSize size = CGSizeMake(self.image.size.width * self.image.scale / [UIScreen mainScreen].scale * imageScale,
                              self.image.size.height * self.image.scale / [UIScreen mainScreen].scale * imageScale);
     
@@ -229,11 +233,7 @@ NSString *const CSTextAttachmentFailedDownloadNotification = @"CSTextAttachmentF
 }
 
 - (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
-    CGRect tb = [self boundsForConsiderSize:textContainer.size];
-    CGRect bounds = CGRectZero;
-    bounds.size.width = tb.size.width;
-    bounds.size.height = tb.size.height;
-    
+    CGRect bounds = [self boundsForConsiderSize:textContainer.size];
     return bounds;
 }
 

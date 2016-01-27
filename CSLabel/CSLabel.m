@@ -90,17 +90,23 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
         }
     }];
     
-    [updatedRangeSet enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
-        NSRange range = [obj rangeValue];
-        [self.layoutManager invalidateLayoutForCharacterRange:range actualCharacterRange:NULL];
+    if (updatedRangeSet.count) {
+        [updatedRangeSet enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
+            NSRange range = [obj rangeValue];
+            [self.layoutManager invalidateLayoutForCharacterRange:range actualCharacterRange:NULL];
+        }];
+        
         [self setNeedsUpdateIntrinsicContentSize];
         [self invalidateIntrinsicContentSize];
         [self setNeedsLayout];
         
-        if ([self.delegate respondsToSelector:@selector(CSLabelDidUpdateAttachment:atRange:)]) {
-            [self.delegate CSLabelDidUpdateAttachment:self atRange:range];
-        }
-    }];
+        [updatedRangeSet enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
+            NSRange range = [obj rangeValue];
+            if ([self.delegate respondsToSelector:@selector(CSLabelDidUpdateAttachment:atRange:)]) {
+                [self.delegate CSLabelDidUpdateAttachment:self atRange:range];
+            }
+        }];
+    }
 }
 
 - (CSTextLink *)_linkAtPoint:(CGPoint)location {

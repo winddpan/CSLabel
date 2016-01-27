@@ -8,7 +8,7 @@
 
 #import "NSString+CSHTML.h"
 
-NSString* const kLaTextURL = @"https://latex.codecogs.com/gif.latex?";
+NSString *const CSLaTextURL = @"https://latex.codecogs.com/gif.latex?";
 
 @implementation NSString (CSHTML)
 
@@ -33,8 +33,9 @@ NSString* const kLaTextURL = @"https://latex.codecogs.com/gif.latex?";
 - (NSString *)cs_urlByLaText:(NSString *)latext
 {
     latext = [latext cs_urlDecode];
-    //NSString *suffix = [@"\\inline \\dpi{200} \\fn_phv &" stringByAppendingString:latext];
-    NSString *tag = [NSString stringWithFormat:@"<img src=\"%@%@\"/>", kLaTextURL, [latext cs_urlEncode]];
+    //    NSString *suffix = [@"\\inline \\dpi{200} \\fn_phv &" stringByAppendingString:latext];
+    //    NSString *arg = [NSString stringWithFormat:@"%@%@", prefix, latext];
+    NSString *tag = [NSString stringWithFormat:@"<img src=\"%@%@\"/>", CSLaTextURL, [latext cs_urlEncode]];
     
     return tag;
 }
