@@ -31,6 +31,7 @@
     CSLabel *testLabel = [[CSLabel alloc] init];
     testLabel.attributedText = xx1;
     
+    self.label.backgroundColor = [UIColor yellowColor];
     self.label.delegate = self;
     self.label.contentInset = UIEdgeInsetsMake(20, 20, 20, 20);
     self.label.attributedText = xx1;

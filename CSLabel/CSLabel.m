@@ -179,7 +179,8 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
         return CGSizeZero;
     }
     size.width -= self.contentInset.left + self.contentInset.right;
-    size.height -= self.contentInset.top + self.contentInset.bottom;
+    size.width = MAX(size.width, 1);
+    size.height = FLT_MAX;
     
     _textContainer.size = size;
     

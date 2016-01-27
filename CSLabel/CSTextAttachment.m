@@ -202,7 +202,7 @@ NSString *const CSTextAttachmentFailedDownloadNotification = @"CSTextAttachmentF
     CGFloat imageScale = (self.image == self.serizlizer.placeholderImage ||
                           self.image == self.serizlizer.failedImage ||
                           [self.contentURL hasPrefix:@"table://"] ||
-                          [self.contentURL hasPrefix:kLaTextURL]) ?  1 : self.serizlizer.scale;
+                          [self.contentURL hasPrefix:CSLaTextURL]) ?  1 : self.serizlizer.scale;
     CGSize size = CGSizeMake(self.image.size.width * self.image.scale / [UIScreen mainScreen].scale * imageScale,
                              self.image.size.height * self.image.scale / [UIScreen mainScreen].scale * imageScale);
     
