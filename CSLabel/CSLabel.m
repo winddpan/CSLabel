@@ -201,6 +201,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 - (void)setActiveLink:(CSTextLink *)activeLink {
     if (_activeLink != activeLink) {
         _activeLink = activeLink;
+        _needUpdateDisplay = YES;
         [self setNeedsDisplay];
     }
 }
@@ -296,14 +297,10 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     
     self.textContainer.size = UIEdgeInsetsInsetRect(self.bounds, self.contentInset).size;
     [super layoutSubviews];
+    [self setNeedsDisplay];
     
-    if (_needUpdateDisplay) {
-        [self setNeedsDisplay];
-        _needUpdateDisplay = NO;
-        
-        if (_shouldLoadAttachments) {
-            [self setNeedsAttachmentsLoad];
-        }
+    if (_shouldLoadAttachments) {
+        [self setNeedsAttachmentsLoad];
     }
 }
 
@@ -312,6 +309,13 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
         [layer removeAllAnimations];
     }
     [super layoutSublayersOfLayer:layer];
+}
+
+- (void)setNeedsDisplay {
+    if (_needUpdateDisplay) {
+        [super setNeedsDisplay];
+        _needUpdateDisplay = NO;
+    }
 }
 
 #pragma mark - draw
