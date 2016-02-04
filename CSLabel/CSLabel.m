@@ -179,8 +179,9 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
         return CGSizeZero;
     }
     size.width -= self.contentInset.left + self.contentInset.right;
-    size.width = MAX(size.width, 1);
-    size.height = FLT_MAX;
+    size.width = size.width > 0 ? size.width : FLT_MAX;
+    size.height -= self.contentInset.top + self.contentInset.bottom;
+    size.height = size.height > 0 ? size.height : FLT_MAX;
     
     _textContainer.size = size;
     
@@ -253,6 +254,7 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
     
     [self.textStorage setAttributedString:drawText];
     [self setNeedsUpdateIntrinsicContentSize];
+    [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
 }
 
