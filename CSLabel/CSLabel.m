@@ -201,9 +201,10 @@ NSString* const CSLinkAttributeName = @"CSLinkAttributeName";
 
 - (void)setActiveLink:(CSTextLink *)activeLink {
     if (_activeLink != activeLink) {
+        CSTextLink *oldLink = _activeLink;
         _activeLink = activeLink;
         
-        if (activeLink.type == CSTextLinkTypeURL) {
+        if (oldLink.type == CSTextLinkTypeURL || activeLink.type == CSTextLinkTypeURL) {
             _needUpdateDisplay = YES;
             [self setNeedsDisplay];
         }
