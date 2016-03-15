@@ -34,7 +34,13 @@ NSString *const CSLaTextURL = @"https://latex.codecogs.com/gif.latex?";
 {
     latext = [latext cs_urlDecode];
     //    NSString *suffix = [@"\\inline \\dpi{200} \\fn_phv &" stringByAppendingString:latext];
-    //    NSString *arg = [NSString stringWithFormat:@"%@%@", prefix, latext];
+    NSString *prefix = @"";
+    if ([UIScreen mainScreen].scale >= 3.0) {
+        prefix = @"\\dpi{300} ";
+    } else if ([UIScreen mainScreen].scale >= 2.0) {
+        prefix = @"\\dpi{200} ";
+    }
+    latext = [prefix stringByAppendingString:latext];
     NSString *tag = [NSString stringWithFormat:@"<img src=\"%@%@\"/>", CSLaTextURL, [latext cs_urlEncode]];
     
     return tag;
