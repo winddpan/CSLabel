@@ -24,7 +24,7 @@
     [[CSTextAttachmentSerializer defaultSerializer] setPlaceholderImage:[UIImage imageNamed:@"download.gif"]];
     
     NSError *error;
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"HTML2" ofType:@"html"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"LongHtml" ofType:@"html"];
     NSString *html = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
     NSAttributedString *xx1 = [[NSAttributedString alloc] initWithHTML:html attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]}];
     
