@@ -1,6 +1,6 @@
-source 'https://github.com/CocoaPods/Specs.git'
+#source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
-target 'CSLabel_Example', :exclusive => true do
+target 'CSLabel_Example' do
   pod "CSLabel", :path => "../"
 end

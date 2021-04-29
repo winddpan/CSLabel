@@ -7,7 +7,6 @@
 //
 
 #import "CSTextAttachment.h"
-#import "CSWebScreenShotter.h"
 #import "NSString+CSHTML.h"
 
 NSString *const CSHTMLTextAttachmentSerializerName = @"CSHTMLTextAttachmentSerializerName";
@@ -113,31 +112,6 @@ NSString *const CSTextAttachmentFailedDownloadNotification = @"CSTextAttachmentF
 - (void)setNeedsLoad {
     NSString *contentURL = self.contentURL;
     __weak typeof(self) weakSelf = self;
-    
-    //表格转附件
-    NSString *tablePreFix = @"table://";
-    if (_status == CSTextAttachmentStatusReady && [contentURL hasPrefix:tablePreFix]) {
-        _status = CSTextAttachmentStatusDownloading;
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSString *base64Str = [contentURL substringFromIndex:tablePreFix.length];
-            NSData *data = [[NSData alloc] initWithBase64EncodedString:base64Str options:0];
-            NSString *html = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [CSWebScreenShotter screenshotWithHtml:html
-                                                 width:self.serizlizer.thumbImageWidth
-                                                  font:self.tableFont
-                                                 color:self.tableColor
-                                            completion:^(UIImage *screenshot) {
-                                                weakSelf.image = screenshot;
-                                                weakSelf.status = CSTextAttachmentStatusDownloaded;
-                                                [[NSNotificationCenter defaultCenter] postNotificationName:CSTextAttachmentDidDownloadNotification object:weakSelf];
-                                            }];
-            });
-        });
-        return;
-    }
     
     if (_status == CSTextAttachmentStatusReady && !_srcImage) {
         _status = CSTextAttachmentStatusDownloading;

@@ -50,7 +50,7 @@
 		7A089F3B1BF042360077BAAC /* HTML3.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = HTML3.html; sourceTree = "<group>"; };
 		7A089F3F1BF049EE0077BAAC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7A0EB18D1CC9F7E2006A90E8 /* LongHtml.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = LongHtml.html; sourceTree = "<group>"; };
-		7A222FE01BF595CE00A783CB /* CSLabel.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CSLabel.podspec; path = ../CSLabel.podspec; sourceTree = "<group>"; };
+		7A222FE01BF595CE00A783CB /* CSLabel.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CSLabel.podspec; path = ../CSLabel.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		7AA6D28D1C43884000FEF033 /* Plan_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Plan_h.png; sourceTree = "<group>"; };
 		7AA6D28F1C4388C900FEF033 /* download.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = download.gif; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -156,12 +156,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5BF195388D20070C39A /* Build configuration list for PBXNativeTarget "CSLabel_Example" */;
 			buildPhases = (
+				85B25C654770176FF6377A19 /* [CP] Check Pods Manifest.lock */,
 				791049A69CDEDCE895FFB898 /* Check Pods Manifest.lock */,
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				D9DE860877D0098408BD9512 /* Embed Pods Frameworks */,
-				0898F21A7B2F5F972926E5E1 /* Copy Pods Resources */,
+				80EB8F0C0797EFAC71AE71D2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -187,6 +188,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -223,21 +225,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0898F21A7B2F5F972926E5E1 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CSLabel_Example/Pods-CSLabel_Example-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		791049A69CDEDCE895FFB898 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -251,6 +238,46 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		80EB8F0C0797EFAC71AE71D2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CSLabel_Example/Pods-CSLabel_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CSLabel/CSLabel.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CSLabel.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CSLabel_Example/Pods-CSLabel_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		85B25C654770176FF6377A19 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CSLabel_Example-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D9DE860877D0098408BD9512 /* Embed Pods Frameworks */ = {

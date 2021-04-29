@@ -1,0 +1,16 @@
+PODS:
+  - CSLabel (1.1.0)
+
+DEPENDENCIES:
+  - CSLabel (from `../`)
+
+EXTERNAL SOURCES:
+  CSLabel:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CSLabel: 0b0b46bb14f5b5c4bdfeba4a5f0c93a08dc49d62
+
+PODFILE CHECKSUM: 9b07173f8b5d93872508760d94f0e2c58124d3a0
+
+COCOAPODS: 1.10.1
